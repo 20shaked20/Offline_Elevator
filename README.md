@@ -8,7 +8,7 @@
 
 ### Introduction
 This repository is part of an assigment in an object oriented programming course at Ariel University,
-Specifically the second assignment, and it is about an offlinee algorithm for smart elevators.
+Specifically the second assignment, and it is about an offline algorithm for smart elevators.
 
 ## Offline algorithm for elevator calls:
 
