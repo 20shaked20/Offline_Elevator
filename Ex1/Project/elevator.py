@@ -30,7 +30,7 @@ class Elevator(object):
     @classmethod
     def from_dict(cls, data_dict):
         """
-        :param data_dict: gets elevator dictionary from Building.py
+        :param data_dict: gets an elevator dictionary from Building.py
         :return: returns the data as an object (elevator)
         """
         return cls(**data_dict)
