@@ -15,7 +15,7 @@ Algorithm output examples Elevator:
 
 '''
 
-f = open("D:/Programming/Python/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B1.json")
+f = open("/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B1.json")
 B1 = json.load(f)
 
 _minFloor = B1["_minFloor"]
