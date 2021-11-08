@@ -11,6 +11,9 @@ This repository is part of an assigment in an object oriented programming course
 Specifically the second assignment, and it is about an offline algorithm for smart elevators.
 
 ## Offline algorithm for elevator calls:
+While we are given all the information beforehand, we can tell how the calls will be.
+Our algorithm will send at a time the elevator to its next required source floor as soon as it finishes with its current task while checking if there are other pickups on the way to our destination floor.
+We will consider the best elevator that is available for each caller while checking the state, speed, and time the call is really made.
 
 ## How to use?
 
