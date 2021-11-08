@@ -8,10 +8,8 @@ import csv
 
 from elevator import Elevator
 
-FILE = ""
 
-
-class Building:
+class Building(object):
 
     def __init__(self, elevators, min_floor, max_floor):
         """
@@ -65,3 +63,43 @@ for row in rows:
     print(rows[i][2])  # prints all the srcs :D
     i += 1
 """
+# CSV creation > > ?
+# TODO: fix the line gap
+'''
+
+file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_a.csv"
+file_out = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\output.csv"
+routes = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls/route.csv"
+
+dict_in = []
+dict_route = []
+with open(file_in, 'r') as f:
+    bla = csv.reader(f)
+    for row in bla:
+        dict_in.append(row)
+
+with open(routes, 'r') as f2:
+    bla2 = csv.reader(f2)
+    for row in bla2:
+        x = row[0]  # i don't want list.
+        # print(x)
+        dict_route.append(x)
+
+# print(dict_route)
+print("input:")
+print(dict_in)
+i = 0
+for row in dict_in:
+    x = dict_route[i]
+    dict_in[i][5] = dict_route[i]  # places the right elevator.. :D
+    i += 1
+print("output:")
+print(dict_in)
+
+with open(file_out, 'w') as f3:
+    bla3 = csv.writer(f3)
+    for row in dict_in:
+        bla3.writerow(row)
+
+
+'''

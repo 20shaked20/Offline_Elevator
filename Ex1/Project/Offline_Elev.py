@@ -5,6 +5,8 @@ date: Nov 5
 
 import json
 import csv
+import Building
+import elevator
 
 '''
 Algorithm input examples :
@@ -20,39 +22,23 @@ Algorithm output examples Elevator:
 # TODO: collect input from cmd - to be explained later by staff
 
 '''
-# READING AND WRITING THE ELEVATOR ROUTE TO OUTPUT :
-file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
-file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_x.csv"
-routes = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/route.csv"
+# LOADING THE CSV FILE :
+file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_a.csv"
+dict_calls = []
+dict_calls = Building.Building.init_calls(file_loc2=file_in)
+print(dict_calls)
+print(dict_calls[0][1])  # time access
+print(dict_calls[0][2])  # src access
+print(dict_calls[0][3])  # destination access
+print(dict_calls[0][4])  # state access
 
-dict_in = []
-dict_route = []
-with open(file_in, 'r') as f:
-    bla = csv.reader(f)
-    for row in bla:
-        dict_in.append(row)
+# LOADING THE JSON FILE : working example
+file2_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Buildings\B2.json"
+dict_b = Building.Building.init_dict(file_loc1=file2_in)
+print(dict_b.elevators[1].__dict__)
+# print(dict_b.elevators[1].speed)
 
-with open(routes, 'r') as f2:
-    bla2 = csv.reader(f2)
-    for row in bla2:
-        x = row[0]  # i don't want list.
-        print(x)
-        dict_route.append(x)
-
-print(dict_route)
-print(dict_in)
-i = 0
-for row in dict_in:
-    x = dict_route[i]
-    dict_in[i][5] = dict_route[i]  # places the right elevator.. :D
-    i += 1
-print(dict_in)
-
-with open(file_out, 'w') as f3:
-    bla3 = csv.writer(f3)
-    for row in dict_in:
-        bla3.writerow(row)
-
-
-# JSON:
-# f = open("/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B1.json")
+x = elevator.Elevator(dict_b.elevators[1].id, dict_b.elevators[1].speed, dict_b.elevators[1].minFloor,
+                      dict_b.elevators[1].maxFloor, dict_b.elevators[1].closeTime, dict_b.elevators[1].openTime,
+                      dict_b.elevators[1].startTime, dict_b.elevators[
+                          1].stopTime)  # elevator creation, need to create as many as we want, can use list? :)
