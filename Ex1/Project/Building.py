@@ -25,6 +25,7 @@ class Building(object):
     @classmethod
     def init_dict(cls, file_loc1: str):
         """
+        This method builds a dictionary from json file while creating the elevator objects.
         :param file_loc1: String representing a file location
         :return: Building dictionary
         """
@@ -38,6 +39,7 @@ class Building(object):
     @classmethod
     def init_calls(cls, file_loc2: str):
         """
+        This method creates a dictionary of elevator calls using the Calls.csv file
         :param file_loc2: String representing a file location
         :return: a dictionary of elevator calls
         """

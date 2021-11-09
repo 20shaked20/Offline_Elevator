@@ -25,6 +25,11 @@ building = Building.Building.init_dict(file_loc1=file2_in)
 # print(dict_b.elevators[0].__dict__)
 # print(dict_b.elevators[1].speed)
 
+# TODO : make a better algorithm ->
+#  1. send the elevator before the caller arrives the src floor.
+#  2. focus on the actual call time
+#  3. pickup more callers on the way if they are already there.
+#  4.
 
 def create_elev(id: int):
     """
@@ -42,6 +47,7 @@ def create_elev(id: int):
 
 def allocate_elev(call, all_elevators):
     """
+    This methods allocates the best elevator to a call.
     :param call: a single call (time,s,d...)
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
@@ -55,7 +61,9 @@ def allocate_elev(call, all_elevators):
 
 def find_closest(src: int, all_elevators):
     """
+    This method finds the closest elevator to a src.
     :param src: Integer representing a source floor
+    :param all_elevators: all the elevators that are in the building
     :return:  ID of the closest elevator.
     """
     closest = all_elevators[0]
