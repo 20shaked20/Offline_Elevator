@@ -19,26 +19,25 @@ dict_calls = Building.Building.init_calls(file_loc2=file_in)
 
 # LOADING THE JSON FILE : working example
 file2_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Buildings\B1.json"
-dict_b = Building.Building.init_dict(file_loc1=file2_in)
+building = Building.Building.init_dict(file_loc1=file2_in)
 
 
 # print(dict_b.elevators[0].__dict__)
 # print(dict_b.elevators[1].speed)
 
+
 def create_elev(id: int):
     """
+    right now im not using it, maybe later.
     :param id: elev_ID
     :return: an object representing elevator
     """
-    elev = elevator.Elevator(dict_b.elevators[id].id, dict_b.elevators[id].speed, dict_b.elevators[id].minFloor,
-                             dict_b.elevators[id].maxFloor, dict_b.elevators[id].closeTime,
-                             dict_b.elevators[id].openTime,
-                             dict_b.elevators[id].startTime, dict_b.elevators[
+    elev = elevator.Elevator(building.elevators[id].id, building.elevators[id].speed, building.elevators[id].minFloor,
+                             building.elevators[id].maxFloor, building.elevators[id].closeTime,
+                             building.elevators[id].openTime,
+                             building.elevators[id].startTime, building.elevators[
                                  id].stopTime)  # elevator creation, need to create as many as we want, can use list? :)
     return elev
-
-
-elev_choice = [100]  # route for elevators allocation
 
 
 def allocate_elev(call, all_elevators):
@@ -47,42 +46,42 @@ def allocate_elev(call, all_elevators):
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
     """
+    src = int(call[2])
+    closest = find_closest(src, all_elevators)
+    elev_curr = all_elevators[closest]
+    elev_curr.go_to(src)
+    return elev_curr.id
 
 
-def find_closest(s, all_elevators):
+def find_closest(src: int, all_elevators):
     """
-    :param s: Integer representing a source floor
+    :param src: Integer representing a source floor
     :return:  ID of the closest elevator.
     """
     closest = all_elevators[0]
-    dist = all_elevators[0].get_pos() - s
-    for x in range(len(all_elevators)):
-        if all_elevators[x].get_pos() - s < dist:
-            dist = all_elevators[x].get_pos() - s
-            closest = all_elevators[x]
-    return closest
+    best_dist = all_elevators[0].get_pos() - src
+    for curr_elevator in all_elevators:
+        if curr_elevator.get_pos() - src < best_dist:
+            best_dist = curr_elevator.get_pos() - src
+            closest = curr_elevator
+    return closest.id
 
 
-def all_calls():
+def all_calls(elevators, d_calls):
     """
-    this method just starts the simulation for the calls in the dictionary
+    This methods starts the simulation for all the elevators calls.
+    :param d_calls: all the calls in the Calls.csv file
+    :param elevators: list representing all the elevator in the building
+    :return: the list 'elev_choices' to be merged with the csv output file.
     """
-    for calls in dict_calls:
-        allocate_elev(call=calls)
+    elev_choices = []
+    for calls in d_calls:
+        elev_choices.append(allocate_elev(call=calls, all_elevators=elevators))
+    return elev_choices
 
 
-def get_elevators(dict_building):
-    """
-    :param dict_building: a building dictionary
-    :return: how many elevators are in the building(this way we can access them by their id
-    """
-    length = len(dict_building.elevators)
-    elevs = [length]
-    for x in range(length):
-        elevs[x] = dict_building.elevators[x]
-    return elevs
+elev_choice = []  # route for elevators allocation
+all_elevs = building.elevators  # all elevators as a list.
+elev_choice = all_calls(all_elevs, dict_calls)
 
-
-all_elevs = get_elevators(dict_b)
-print(all_elevs[0].__dict__)
-find_closest(3, all_elevs)
+print(elev_choice)

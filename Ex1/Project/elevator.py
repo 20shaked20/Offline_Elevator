@@ -3,9 +3,6 @@
 date: Nov 5
 """
 
-elev_pos = 0
-elev_state = 0  # 0  = idle, 1 = UP , -1 = DOWN
-
 
 class Elevator(object):
 
@@ -29,6 +26,8 @@ class Elevator(object):
         self.openTime = _openTime
         self.startTime = _startTime
         self.stopTime = _stopTime
+        self.elev_pos = 0
+        self.elev_state = 0
 
     @classmethod
     def from_dict(cls, data_dict):
@@ -38,34 +37,28 @@ class Elevator(object):
         """
         return cls(**data_dict)
 
-    @staticmethod
-    def go_to(new_pos):
+    def go_to(self, new_pos):
         """
         this method simply tells the elevator where to go next. i'e will be used to check positions.
         :param new_pos: Integer representing a floor the elevator to go.
         """
-        global elev_pos
-        elev_pos = new_pos
+        self.elev_pos = new_pos
 
-    @staticmethod
-    def get_pos():
+    def get_pos(self):
         """
         :return: the elevator current position.
         """
-        return elev_pos
+        return int(self.elev_pos)
 
-    @staticmethod
-    def set_state(new_state):
+    def set_state(self, new_state):
         """
         Right now im not sure this will be useful, im just implementing in case of need.
         :param new_state: gets the new state for our elevator
         """
-        global elev_state
-        elev_state = new_state
+        self.elev_state = new_state
 
-    @staticmethod
-    def get_state():
+    def get_state(self):
         """
         :return: the elevator current state -> 0 IDLE, 1 UP , -1 DOWN
         """
-        return elev_state
+        return int(self.elev_state)
