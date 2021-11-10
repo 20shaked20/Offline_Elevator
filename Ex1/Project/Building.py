@@ -50,58 +50,42 @@ class Building(object):
                 dict_calls.append(row)
         return dict_calls
 
+    @classmethod
+    def create_csv(cls, file_in: str, route: str, file_out: str, elev_choices):
+        dict_in = []
+        dict_route = []
+        with open(file_in, 'r') as f:
+            writer_in = csv.reader(f)
+            for row in writer_in:
+                dict_in.append(row)
 
-"""
-# Test_Check:
-file = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B2.json"
-x = Building.init_dict(file_loc1=file)
-# print(x.elevators[1].__dict__)
-# print(x.elevators[1].id)
+        with open(routes, 'w') as f2:
+            writer_route = csv.writer(f2)
+            for index in elev_choices:
+                x = elev_choices[index]  # i don't want list.
+                dict_route.append(x)
 
-file2 = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
-rows = Building.init_calls(file_loc2=file2)
-i = 0;
-for row in rows:
-    print(rows[i][2])  # prints all the srcs :D
-    i += 1
-"""
+        print("DICT_ROUTE:")
+        print(dict_route)
+        print("input:")
+        print(dict_in)
+        i = 0
+        for row in dict_in:
+            dict_in[i][5] = dict_route[i]  # places the right elevator.. :D
+            i += 1
+        print("output:")
+        print(dict_in)
+
+        with open(file_out, 'w') as f3:
+            writer_out = csv.writer(f3)
+            for row in dict_in:
+                writer_out.writerow(row)
+
+
 # CSV creation > > ?
 # TODO: fix the line gap
-'''
-
-file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_a.csv"
-file_out = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\output.csv"
-routes = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls/route.csv"
-
-dict_in = []
-dict_route = []
-with open(file_in, 'r') as f:
-    bla = csv.reader(f)
-    for row in bla:
-        dict_in.append(row)
-
-with open(routes, 'r') as f2:
-    bla2 = csv.reader(f2)
-    for row in bla2:
-        x = row[0]  # i don't want list.
-        # print(x)
-        dict_route.append(x)
-
-# print(dict_route)
-print("input:")
-print(dict_in)
-i = 0
-for row in dict_in:
-    x = dict_route[i]
-    dict_in[i][5] = dict_route[i]  # places the right elevator.. :D
-    i += 1
-print("output:")
-print(dict_in)
-
-with open(file_out, 'w') as f3:
-    bla3 = csv.writer(f3)
-    for row in dict_in:
-        bla3.writerow(row)
 
 
-'''
+file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
+file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
+routes = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/route.csv"

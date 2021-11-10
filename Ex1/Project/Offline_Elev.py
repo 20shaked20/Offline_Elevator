@@ -8,7 +8,7 @@ import Building
 import elevator
 
 # LOADING THE CSV FILE :
-file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_a.csv"
+file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
 dict_calls = []
 dict_calls = Building.Building.init_calls(file_loc2=file_in)
 # print(dict_calls)
@@ -18,7 +18,7 @@ dict_calls = Building.Building.init_calls(file_loc2=file_in)
 # print(dict_calls[0][4])  # state access
 
 # LOADING THE JSON FILE : working example
-file2_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Buildings\B1.json"
+file2_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
 building = Building.Building.init_dict(file_loc1=file2_in)
 
 
@@ -93,3 +93,8 @@ all_elevs = building.elevators  # all elevators as a list.
 elev_choice = all_calls(all_elevs, dict_calls)
 
 print(elev_choice)
+
+file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
+file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
+routes = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/route.csv"
+Building.Building.create_csv(file_in, routes, file_out, elev_choice)
