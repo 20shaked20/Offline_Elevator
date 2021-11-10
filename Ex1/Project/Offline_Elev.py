@@ -7,23 +7,6 @@ import csv
 import Building
 import elevator
 
-# LOADING THE CSV FILE :
-file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
-dict_calls = []
-dict_calls = Building.Building.init_calls(file_loc2=file_in)
-# print(dict_calls)
-# print(dict_calls[0][1])  # time access
-# print(dict_calls[0][2])  # src access
-# print(dict_calls[0][3])  # destination access
-# print(dict_calls[0][4])  # state access
-
-# LOADING THE JSON FILE : working example
-file2_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
-building = Building.Building.init_dict(file_loc1=file2_in)
-
-
-# print(dict_b.elevators[0].__dict__)
-# print(dict_b.elevators[1].speed)
 
 # TODO : make a better algorithm ->
 #  1. send the elevator before the caller arrives the src floor.
@@ -88,13 +71,26 @@ def all_calls(elevators, d_calls):
     return elev_choices
 
 
-elev_choice = []  # route for elevators allocation
-all_elevs = building.elevators  # all elevators as a list.
-elev_choice = all_calls(all_elevs, dict_calls)
+if __name__ == '__main__':
+    # LOADING THE CSV FILE :
+    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_d.csv"
+    dict_calls = []
+    dict_calls = Building.Building.init_calls(file_loc2=file_in)
+    # print(dict_calls)
+    # print(dict_calls[0][1])  # time access
+    # print(dict_calls[0][2])  # src access
+    # print(dict_calls[0][3])  # destination access
+    # print(dict_calls[0][4])  # state access
 
-print(elev_choice)
+    # LOADING THE JSON FILE : working example
+    Json_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
+    building = Building.Building.init_dict(file_loc1=Json_in)
+    elev_choice = []  # route for elevators allocation
+    all_elevs = building.elevators  # all elevators as a list.
+    elev_choice = all_calls(all_elevs, dict_calls)
 
-file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
-file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
-routes = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/route.csv"
-Building.Building.create_csv(file_in, routes, file_out, elev_choice)
+    print("Elev Choices:")
+    print(elev_choice)
+
+    file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
+    Building.Building.csv_output(file_in, file_out, elev_choice)

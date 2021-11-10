@@ -51,27 +51,18 @@ class Building(object):
         return dict_calls
 
     @classmethod
-    def create_csv(cls, file_in: str, route: str, file_out: str, elev_choices):
+    def csv_output(cls, file_in: str, file_out: str, elev_choices):
         dict_in = []
-        dict_route = []
         with open(file_in, 'r') as f:
             writer_in = csv.reader(f)
             for row in writer_in:
                 dict_in.append(row)
 
-        with open(routes, 'w') as f2:
-            writer_route = csv.writer(f2)
-            for index in elev_choices:
-                x = elev_choices[index]  # i don't want list.
-                dict_route.append(x)
-
-        print("DICT_ROUTE:")
-        print(dict_route)
         print("input:")
         print(dict_in)
         i = 0
         for row in dict_in:
-            dict_in[i][5] = dict_route[i]  # places the right elevator.. :D
+            dict_in[i][5] = elev_choices[i]  # places the right elevator.. :D
             i += 1
         print("output:")
         print(dict_in)
@@ -80,12 +71,3 @@ class Building(object):
             writer_out = csv.writer(f3)
             for row in dict_in:
                 writer_out.writerow(row)
-
-
-# CSV creation > > ?
-# TODO: fix the line gap
-
-
-file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
-file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
-routes = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/route.csv"
