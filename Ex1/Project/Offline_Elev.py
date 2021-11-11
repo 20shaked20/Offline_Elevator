@@ -12,7 +12,7 @@ import elevator
 #  1. send the elevator before the caller arrives the src floor.
 #  2. focus on the actual call time
 #  3. pickup more callers on the way if they are already there.
-#  4.
+#  4. Build a thread timer > i'e count the time of the current call and check best routes.
 
 def create_elev(id: int):
     """
@@ -36,9 +36,11 @@ def allocate_elev(call, all_elevators):
     :return: the best elevator to send.
     """
     src = int(call[2])
+    destination = int(call[3])
     closest = find_closest(src, all_elevators)
     elev_curr = all_elevators[closest]
-    elev_curr.go_to(src)
+    elev_curr.go_to(src)  # goes directly to source, picks him up
+    elev_curr.go_to(destination)  # and then goes directly to destination, removes the caller.
     return elev_curr.id
 
 
@@ -58,6 +60,16 @@ def find_closest(src: int, all_elevators):
     return closest.id
 
 
+def on_route(src: int, cur):
+    """
+    Gets a src and checks if its already on the route of the elevator, so it can pick him.
+    :param src: Integer representing a source floor
+    :param current_elev: the elev we're using right now.
+    :return: true for in route, false for not in route.
+    """
+    pass
+
+
 def all_calls(elevators, d_calls):
     """
     This methods starts the simulation for all the elevators calls.
@@ -73,7 +85,7 @@ def all_calls(elevators, d_calls):
 
 if __name__ == '__main__':
     # LOADING THE CSV FILE :
-    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_d.csv"
+    file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_a.csv"
     dict_calls = []
     dict_calls = Building.Building.init_calls(file_loc2=file_in)
     # print(dict_calls)
@@ -83,7 +95,7 @@ if __name__ == '__main__':
     # print(dict_calls[0][4])  # state access
 
     # LOADING THE JSON FILE : working example
-    Json_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
+    Json_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Buildings\B5.json"
     building = Building.Building.init_dict(file_loc1=Json_in)
     elev_choice = []  # route for elevators allocation
     all_elevs = building.elevators  # all elevators as a list.
@@ -92,5 +104,5 @@ if __name__ == '__main__':
     print("Elev Choices:")
     print(elev_choice)
 
-    file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
+    file_out = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\output.csv"
     Building.Building.csv_output(file_in, file_out, elev_choice)
