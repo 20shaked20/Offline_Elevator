@@ -4,13 +4,14 @@ date: Nov 5
 """
 import csv
 
-import Building
-import elevator
+from Building import Building
+from elevator import Elevator
+from comparators import Comparators
 
 
 # TODO : make a better algorithm ->
 #  1. send the elevator before the caller arrives the src floor.
-#  2. focus on the actual call time
+#  2. focus on the actual call time.
 #  3. pickup more callers on the way if they are already there.
 #  4. Build a thread timer > i'e count the time of the current call and check best routes.
 
@@ -20,66 +21,42 @@ def create_elev(id: int):
     :param id: elev_ID
     :return: an object representing elevator
     """
-    elev = elevator.Elevator(building.elevators[id].id, building.elevators[id].speed, building.elevators[id].minFloor,
-                             building.elevators[id].maxFloor, building.elevators[id].closeTime,
-                             building.elevators[id].openTime,
-                             building.elevators[id].startTime, building.elevators[
-                                 id].stopTime)  # elevator creation, need to create as many as we want, can use list? :)
+    elev = Elevator(building.elevators[id].id, building.elevators[id].speed, building.elevators[id].minFloor,
+                    building.elevators[id].maxFloor, building.elevators[id].closeTime,
+                    building.elevators[id].openTime,
+                    building.elevators[id].startTime, building.elevators[
+                        id].stopTime)  # elevator creation, need to create as many as we want, can use list? :)
     return elev
 
 
-def allocate_elev(call, all_elevators):
+def allocate_elev(call, all_elevators, elev_route):
     """
     This methods allocates the best elevator to a call.
+    :param elev_route:
     :param call: a single call (time,s,d...)
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
     """
     src = int(call[2])
     destination = int(call[3])
-    closest = find_closest(src, all_elevators)
+    closest = Comparators.find_closest(src, all_elevators)
     elev_curr = all_elevators[closest]
     elev_curr.go_to(src)  # goes directly to source, picks him up
     elev_curr.go_to(destination)  # and then goes directly to destination, removes the caller.
     return elev_curr.id
 
 
-def find_closest(src: int, all_elevators):
-    """
-    This method finds the closest elevator to a src.
-    :param src: Integer representing a source floor
-    :param all_elevators: all the elevators that are in the building
-    :return:  ID of the closest elevator.
-    """
-    closest = all_elevators[0]
-    best_dist = all_elevators[0].get_pos() - src
-    for curr_elevator in all_elevators:
-        if curr_elevator.get_pos() - src < best_dist:
-            best_dist = curr_elevator.get_pos() - src
-            closest = curr_elevator
-    return closest.id
-
-
-def on_route(src: int, cur):
-    """
-    Gets a src and checks if its already on the route of the elevator, so it can pick him.
-    :param src: Integer representing a source floor
-    :param current_elev: the elev we're using right now.
-    :return: true for in route, false for not in route.
-    """
-    pass
-
-
-def all_calls(elevators, d_calls):
+def all_calls(elevators, d_calls, elev_routes):
     """
     This methods starts the simulation for all the elevators calls.
+    :param elev_routes:
     :param d_calls: all the calls in the Calls.csv file
     :param elevators: list representing all the elevator in the building
     :return: the list 'elev_choices' to be merged with the csv output file.
     """
     elev_choices = []
     for calls in d_calls:
-        elev_choices.append(allocate_elev(call=calls, all_elevators=elevators))
+        elev_choices.append(allocate_elev(call=calls, all_elevators=elevators, elev_route=elev_routes))
     return elev_choices
 
 
@@ -87,7 +64,7 @@ if __name__ == '__main__':
     # LOADING THE CSV FILE :
     file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_a.csv"
     dict_calls = []
-    dict_calls = Building.Building.init_calls(file_loc2=file_in)
+    dict_calls = Building.init_calls(file_loc2=file_in)
     # print(dict_calls)
     # print(dict_calls[0][1])  # time access
     # print(dict_calls[0][2])  # src access
@@ -96,13 +73,14 @@ if __name__ == '__main__':
 
     # LOADING THE JSON FILE : working example
     Json_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Buildings\B5.json"
-    building = Building.Building.init_dict(file_loc1=Json_in)
-    elev_choice = []  # route for elevators allocation
+    building = Building.init_dict(file_loc1=Json_in)
+    elev_choice = []  # elevators allocation
+    elev_route = []  # route of current elevator.
     all_elevs = building.elevators  # all elevators as a list.
-    elev_choice = all_calls(all_elevs, dict_calls)
+    elev_choice = all_calls(all_elevs, dict_calls, elev_route)
 
     print("Elev Choices:")
     print(elev_choice)
 
     file_out = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\output.csv"
-    Building.Building.csv_output(file_in, file_out, elev_choice)
+    Building.csv_output(file_in, file_out, elev_choice)
