@@ -10,10 +10,9 @@ from comparators import Comparators
 
 
 # TODO : make a better algorithm ->
-#  1. send the elevator before the caller arrives the src floor.
-#  2. focus on the actual call time.
-#  3. pickup more callers on the way if they are already there.
-#  4. Build a thread timer > i'e count the time of the current call and check best routes.
+#   1. pickup more callers on the way if they are already there.
+#   2. implement routing system for elevators
+#   3. consider using up/down somehow?..
 
 def create_elev(id: int):
     """
@@ -37,13 +36,18 @@ def allocate_elev(call, all_elevators, elev_route):
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
     """
-    src = int(call[2])
+    # TODO:
+    #       fix this function to have a routing system maybe or check elevators in better way.
+    #       Right now it only sends the fastest elevator and sometimes close ones, i need to fix it.
+
+    # src = int(call[2])
     destination = int(call[3])
-    closest = Comparators.find_closest(src, all_elevators)
-    elev_curr = all_elevators[closest]
-    elev_curr.go_to(src)  # goes directly to source, picks him up
+    # closest = Comparators.find_closest(src, all_elevators)
+    elev_curr = all_elevators[0]
+    # elev_curr.go_to(src)  # goes directly to source, picks him up
     elev_curr.go_to(destination)  # and then goes directly to destination, removes the caller.
-    return elev_curr.id
+    index = Comparators.best_elev(call, all_elevators)
+    return index
 
 
 def all_calls(elevators, d_calls, elev_routes):
@@ -62,7 +66,7 @@ def all_calls(elevators, d_calls, elev_routes):
 
 if __name__ == '__main__':
     # LOADING THE CSV FILE :
-    file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_a.csv"
+    file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_d.csv"
     dict_calls = []
     dict_calls = Building.init_calls(file_loc2=file_in)
     # print(dict_calls)
@@ -75,7 +79,7 @@ if __name__ == '__main__':
     Json_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Buildings\B5.json"
     building = Building.init_dict(file_loc1=Json_in)
     elev_choice = []  # elevators allocation
-    elev_route = []  # route of current elevator.
+    elev_route = [[], []]  # route of current elevator.
     all_elevs = building.elevators  # all elevators as a list.
     elev_choice = all_calls(all_elevs, dict_calls, elev_route)
 
