@@ -4,7 +4,6 @@ date: Nov 9
 """
 import Building
 import elevator
-
 '''
 
 Algorithm input examples :

@@ -1,18 +1,13 @@
 """
-@authors: "Shaked & Yonathan"
+@authors: "Shaked & Yonatan"
 date: Nov 5
 """
 import csv
 
 import Building
 import elevator
+import Comparisons
 
-
-# TODO : make a better algorithm ->
-#  1. send the elevator before the caller arrives the src floor.
-#  2. focus on the actual call time
-#  3. pickup more callers on the way if they are already there.
-#  4.
 
 def create_elev(id: int):
     """
@@ -35,27 +30,36 @@ def allocate_elev(call, all_elevators):
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
     """
+    # TODO: write down complete algo sequence and then put it into code. make sure to consider time of movement
     src = int(call[2])
-    closest = find_closest(src, all_elevators)
-    elev_curr = all_elevators[closest]
-    elev_curr.go_to(src)
-    return elev_curr.id
+    idle = Comparisons.closestIdle(src)  # can return false
+    on_way = Comparisons.closestOnTheWay(src)  # can return false
+    busy = Comparisons.closestBusy(src)  # MUST return an elev object
 
+    if idle is False and on_way is False:
+        all_elevators[busy].prev_assigned = all_elevators[busy].last_assigned
+        all_elevators[busy].last_assigned = call
+        return busy
 
-def find_closest(src: int, all_elevators):
-    """
-    This method finds the closest elevator to a src.
-    :param src: Integer representing a source floor
-    :param all_elevators: all the elevators that are in the building
-    :return:  ID of the closest elevator.
-    """
-    closest = all_elevators[0]
-    best_dist = all_elevators[0].get_pos() - src
-    for curr_elevator in all_elevators:
-        if curr_elevator.get_pos() - src < best_dist:
-            best_dist = curr_elevator.get_pos() - src
-            closest = curr_elevator
-    return closest.id
+    if idle is False:
+        if Comparisons.arriveTimeOnWay(on_way, src) < Comparisons.arriveTimeBusy(busy, src):
+            all_elevators[on_way].prev_assigned = all_elevators[on_way].last_assigned
+            all_elevators[on_way].last_assigned = call
+            return on_way
+        else:
+            all_elevators[busy].prev_assigned = all_elevators[busy].last_assigned
+            all_elevators[busy].last_assigned = call
+            return busy
+
+    if on_way is False:
+        if Comparisons.arriveTimeIdle(on_way, src) < Comparisons.arriveTimeBusy(busy, src):
+            all_elevators[idle].prev_assigned = all_elevators[idle].last_assigned
+            all_elevators[idle].last_assigned = call
+            return idle
+        else:
+            all_elevators[busy].prev_assigned = all_elevators[busy].last_assigned
+            all_elevators[busy].last_assigned = call
+            return busy
 
 
 def all_calls(elevators, d_calls):

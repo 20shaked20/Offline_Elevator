@@ -27,7 +27,10 @@ class Elevator(object):
         self.startTime = _startTime
         self.stopTime = _stopTime
         self.elev_pos = 0
-        self.elev_state = 0
+        self.elev_state = 0          #last relevant direction
+        self.last_assigned = None    #last assigned call
+        self.prev_assigned = None    #seccond last assigned call
+        # calls initialised as empty
 
     @classmethod
     def from_dict(cls, data_dict):
