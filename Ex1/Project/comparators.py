@@ -38,10 +38,12 @@ class Comparators:
         """
         # elev is up and src is on way
         if curr_elev.elev_pos < src and src < dest:  # and curr_elev.elev_state == 1:
+            curr_elev.set_state = 1
             return True
 
         # elev down and didn't pass src floor
         if curr_elev.elev_pos > src and src > dest:  # and curr_elev.elev_state == -1:
+            curr_elev.set_state = -1
             return True
 
             # is idle then available.
@@ -79,11 +81,12 @@ class Comparators:
         """
         best_elev_id = -1
         best_time_to_src = sys.maxsize  # max value there is.
-        curr_elev = all_elevators[0]
         curr_time_to_src = 0
         i = 0
         src = int(call[2])
         destination = int(call[3])
+        closest = Comparators.find_closest(src, all_elevators)
+        curr_elev = all_elevators[closest]
 
         for elevator in all_elevators:  # best case
             curr_elev = all_elevators[i]
@@ -103,4 +106,7 @@ class Comparators:
                     best_elev_id = i
                     best_time_to_src = curr_time_to_src
                 i += 1
+
+
+
         return best_elev_id

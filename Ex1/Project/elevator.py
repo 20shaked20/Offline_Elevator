@@ -44,7 +44,7 @@ class Elevator(object):
         """
         self.elev_pos = int(new_pos)
 
-    def set_state(self, new_state):
+    def set_state(self, new_state: int):
         """
         Right now im not sure this will be useful, im just implementing in case of need.
         :param new_state: gets the new state for our elevator

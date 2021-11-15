@@ -28,10 +28,9 @@ def create_elev(id: int):
     return elev
 
 
-def allocate_elev(call, all_elevators, elev_route):
+def allocate_elev(call, all_elevators, elev_routes):
     """
     This methods allocates the best elevator to a call.
-    :param elev_route:
     :param call: a single call (time,s,d...)
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
@@ -40,14 +39,19 @@ def allocate_elev(call, all_elevators, elev_route):
     #       fix this function to have a routing system maybe or check elevators in better way.
     #       Right now it only sends the fastest elevator and sometimes close ones, i need to fix it.
 
-    # src = int(call[2])
+    src = int(call[2])
     destination = int(call[3])
-    # closest = Comparators.find_closest(src, all_elevators)
-    elev_curr = all_elevators[0]
-    # elev_curr.go_to(src)  # goes directly to source, picks him up
-    elev_curr.go_to(destination)  # and then goes directly to destination, removes the caller.
     index = Comparators.best_elev(call, all_elevators)
-    return index
+    curr_elev = all_elevators[index]
+    curr_elev.go_to(destination)
+    if curr_elev.elev_pos > destination:  # goes up?
+        curr_elev.set_state(1)
+    elif curr_elev.elev_pos < destination:  # goes down?
+        curr_elev.set_state(-1)
+    closest = Comparators.find_closest(src, all_elevators)
+    curr_elev = all_elevators[closest]
+    curr_elev.go_to(src)
+    return closest
 
 
 def all_calls(elevators, d_calls, elev_routes):
@@ -60,13 +64,13 @@ def all_calls(elevators, d_calls, elev_routes):
     """
     elev_choices = []
     for calls in d_calls:
-        elev_choices.append(allocate_elev(call=calls, all_elevators=elevators, elev_route=elev_routes))
+        elev_choices.append(allocate_elev(call=calls, all_elevators=elevators, elev_routes=elev_routes))
     return elev_choices
 
 
 if __name__ == '__main__':
     # LOADING THE CSV FILE :
-    file_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_d.csv"
+    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_d.csv"
     dict_calls = []
     dict_calls = Building.init_calls(file_loc2=file_in)
     # print(dict_calls)
@@ -76,15 +80,15 @@ if __name__ == '__main__':
     # print(dict_calls[0][4])  # state access
 
     # LOADING THE JSON FILE : working example
-    Json_in = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Buildings\B5.json"
+    Json_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
     building = Building.init_dict(file_loc1=Json_in)
     elev_choice = []  # elevators allocation
-    elev_route = [[], []]  # route of current elevator.
+    elev_routes = [[], [], [], [], [], [], [], [], [], [], []]  # route of current elevator.
     all_elevs = building.elevators  # all elevators as a list.
-    elev_choice = all_calls(all_elevs, dict_calls, elev_route)
+    elev_choice = all_calls(all_elevs, dict_calls, elev_routes)
 
     print("Elev Choices:")
     print(elev_choice)
 
-    file_out = "D:\Programming\Python\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\output.csv"
+    file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
     Building.csv_output(file_in, file_out, elev_choice)
