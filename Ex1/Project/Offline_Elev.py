@@ -30,11 +30,10 @@ def allocate_elev(call, all_elevators):
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
     """
-    # TODO: write down complete algo sequence and then put it into code. make sure to consider time of movement
     src = int(call[2])
-    idle = Comparisons.closestIdle(src)  # can return false
-    on_way = Comparisons.closestOnTheWay(src)  # can return false
-    busy = Comparisons.closestBusy(src)  # MUST return an elev object
+    idle = Comparisons.closestIdle(call)  # can return false
+    on_way = Comparisons.closestOnTheWay(call)  # can return false
+    busy = Comparisons.closestBusy(call)  # MUST return an elev object
 
     if idle is False and on_way is False:
         all_elevators[busy].prev_assigned = all_elevators[busy].last_assigned
