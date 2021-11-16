@@ -4,10 +4,6 @@ date: Nov 9
 """
 import sys
 
-"""
-comparators class:
-"""
-
 
 class Comparators:
 
@@ -36,7 +32,7 @@ class Comparators:
         """
         this method finds if a certain call is on_route for our current elevator call.
         :param call: a single call (s,d,time..)
-        :param all_elevators: all elevators in the building
+        :param curr_elevator: elevator for which this is calculated
         :return: True/False depends if its on route or not.
         """
         src = int(call[2])
@@ -76,7 +72,29 @@ class Comparators:
 
         closest = Comparators.find_closest(call, all_elevators)
         best_time = Comparators.best_time_to_src(call, all_elevators)
-        if closest == best_time:
-            return closest  # is the same.
-        else:
-            return best_time
+        return best_time
+
+
+# UNUSED METHODS:
+"""
+
+    @classmethod
+    def find_closest(cls, call, all_elevators):
+        
+        This method finds the closest elevator to a src, regardless of it's current destination
+        :param call: object representing a call
+        :param all_elevators: all the elevators that are in the building
+        :return:  ID of the closest elevator.
+        
+        src = int(call[2])
+        destination = int(call[3])
+        closest = all_elevators[0]
+        best_dist = all_elevators[0].elev_pos - src
+        for curr_elevator in all_elevators:
+            if curr_elevator.elev_pos - src < best_dist:
+                best_dist = curr_elevator.elev_pos - src
+                closest = curr_elevator
+        closest.set_des(destination)
+        closest.go_to(src)  # sends the elevator to src. /5
+        return closest.id
+"""

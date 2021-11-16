@@ -14,19 +14,6 @@ from comparators import Comparators
 #   2. implement routing system for elevators
 #   3. consider using up/down somehow?..
 
-def create_elev(id: int):
-    """
-    right now im not using it, maybe later.
-    :param id: elev_ID
-    :return: an object representing elevator
-    """
-    elev = Elevator(building.elevators[id].id, building.elevators[id].speed, building.elevators[id].minFloor,
-                    building.elevators[id].maxFloor, building.elevators[id].closeTime,
-                    building.elevators[id].openTime,
-                    building.elevators[id].startTime, building.elevators[
-                        id].stopTime)  # elevator creation, need to create as many as we want, can use list? :)
-    return elev
-
 
 def allocate_elev(call, all_elevators):
     """
@@ -40,7 +27,7 @@ def allocate_elev(call, all_elevators):
 
     best_elev_id = Comparators.best_elev(call, all_elevators)
     curr_elev = all_elevators[best_elev_id]
-    Comparators.in_route(call, curr_elev)
+    Comparators.src_in_route(call, curr_elev)
     return best_elev_id
 
 
@@ -59,14 +46,9 @@ def all_calls(elevators, d_calls):
 
 if __name__ == '__main__':
     # LOADING THE CSV FILE :
-    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
+    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_d.csv"
     dict_calls = []
     dict_calls = Building.init_calls(file_loc2=file_in)
-    # print(dict_calls)
-    # print(dict_calls[0][1])  # time access
-    # print(dict_calls[0][2])  # src access
-    # print(dict_calls[0][3])  # destination access
-    # print(dict_calls[0][4])  # state access
 
     # LOADING THE JSON FILE : working example
     Json_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
@@ -78,5 +60,23 @@ if __name__ == '__main__':
     print("Elev Choices:")
     print(elev_choice)
 
+    # CREATING CSV OUTPUT FILE:
     file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
     Building.csv_output(file_in, file_out, elev_choice)
+
+
+
+"""
+def create_elev(id: int):
+    
+    right now im not using it, maybe later.
+    :param id: elev_ID
+    :return: an object representing elevator
+
+    elev = Elevator(building.elevators[id].id, building.elevators[id].speed, building.elevators[id].minFloor,
+                    building.elevators[id].maxFloor, building.elevators[id].closeTime,
+                    building.elevators[id].openTime,
+                    building.elevators[id].startTime, building.elevators[
+                        id].stopTime)  # elevator creation, need to create as many as we want, can use list? :)
+    return elev
+"""
