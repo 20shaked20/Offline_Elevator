@@ -12,7 +12,7 @@ import elevator
 # call[4]  # state access
 
 def floorDiff(floor1, floor2):
-    return abs(floor1 - floor2)
+    return abs(int(floor1) - int(floor2))
 
 
 def distanceFromElev(elev: elevator, floor: int):
@@ -66,7 +66,7 @@ def getTimeFromCurr(elev: elevator, floor: int, call):
 
 
 def getSpeed(elev: elevator):
-    return elev.speed
+    return int(elev.speed)
 
 
 def getFloorTime(elev: elevator):

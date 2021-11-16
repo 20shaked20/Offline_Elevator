@@ -67,7 +67,7 @@ class Building(object):
         print("output:")
         print(dict_in)
 
-        with open(file_out, 'w') as f3:
+        with open(file_out, 'w', newline='') as f3:
             writer_out = csv.writer(f3)
             for row in dict_in:
                 writer_out.writerow(row)

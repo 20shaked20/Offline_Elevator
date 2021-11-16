@@ -117,7 +117,7 @@ if __name__ == '__main__':
     # print(dict_calls[0][4])  # state access
 
     # LOADING THE JSON FILE : working example
-    Json_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
+    Json_in = r"C:\Users\yonar\PycharmProjects\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Buildings\B4.json"
     building = Building.Building.init_dict(file_loc1=Json_in)
     elev_choice = []  # route for elevators allocation
     all_elevs = building.elevators  # all elevators as a list.
@@ -126,5 +126,5 @@ if __name__ == '__main__':
     print("Elev Choices:")
     print(elev_choice)
 
-    file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
+    file_out = r"C:\Users\yonar\PycharmProjects\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\output.csv"
     Building.Building.csv_output(file_in, file_out, elev_choice)

@@ -47,21 +47,9 @@ class Elevator(object):
         """
         self.elev_pos = new_pos
 
-    def get_pos(self):
-        """
-        :return: the elevator current position.
-        """
-        return int(self.elev_pos)
-
     def set_state(self, new_state):
         """
         Right now im not sure this will be useful, im just implementing in case of need.
         :param new_state: gets the new state for our elevator
         """
         self.elev_state = new_state
-
-    def get_state(self):
-        """
-        :return: the elevator current state -> 0 IDLE, 1 UP , -1 DOWN
-        """
-        return int(self.elev_state)
