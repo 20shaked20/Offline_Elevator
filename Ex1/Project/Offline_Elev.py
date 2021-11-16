@@ -2,23 +2,24 @@
 @authors: "Shaked & Yonatan"
 date: Nov 5
 """
-import csv
+# import csv
 
 import Building
 import elevator
 import Comparisons
 
 
-def create_elev(id: int):
+def create_elev(elev_id: int):
     """
     right now im not using it, maybe later.
-    :param id: elev_ID
+    :param elev_id: elev_ID
     :return: an object representing elevator
     """
-    elev = elevator.Elevator(building.elevators[id].id, building.elevators[id].speed, building.elevators[id].minFloor,
-                             building.elevators[id].maxFloor, building.elevators[id].closeTime,
-                             building.elevators[id].openTime,
-                             building.elevators[id].startTime, building.elevators[
+    elev = elevator.Elevator(building.elevators[elev_id].id, building.elevators[elev_id].speed,
+                             building.elevators[elev_id].minFloor,
+                             building.elevators[elev_id].maxFloor, building.elevators[elev_id].closeTime,
+                             building.elevators[elev_id].openTime,
+                             building.elevators[elev_id].startTime, building.elevators[
                                  id].stopTime)  # elevator creation, need to create as many as we want, can use list? :)
     return elev
 
@@ -31,34 +32,64 @@ def allocate_elev(call, all_elevators):
     :return: the best elevator to send.
     """
     src = int(call[2])
-    idle = Comparisons.closestIdle(call)  # can return false
-    on_way = Comparisons.closestOnTheWay(call)  # can return false
-    busy = Comparisons.closestBusy(call)  # MUST return an elev object
+    dest = int(call[3])
+    idle = Comparisons.closestIdle(call, all_elevators)  # can return false
+    on_way = Comparisons.closestOnTheWay(call, all_elevators)  # can return false
+    busy = Comparisons.closestBusy(call, all_elevators)  # MUST return an elev object
 
     if idle is False and on_way is False:
-        all_elevators[busy].prev_assigned = all_elevators[busy].last_assigned
-        all_elevators[busy].last_assigned = call
-        return busy
+        all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
+        all_elevators[busy.id].last_assigned = call
+        busy.elev_pos = call[3]
+        updateState(busy, src, dest)
+        return busy.id
+
 
     if idle is False:
-        if Comparisons.arriveTimeOnWay(on_way, src) < Comparisons.arriveTimeBusy(busy, src):
-            all_elevators[on_way].prev_assigned = all_elevators[on_way].last_assigned
-            all_elevators[on_way].last_assigned = call
-            return on_way
+        if Comparisons.arriveTimeOnWay(on_way, call) < Comparisons.arriveTimeBusy(busy, call):
+            all_elevators[on_way.id].prev_assigned = all_elevators[on_way.id].last_assigned
+            all_elevators[on_way.id].last_assigned = call
+            on_way.elev_pos = call[3]
+            updateState(on_way, src, dest)
+            return on_way.id
         else:
-            all_elevators[busy].prev_assigned = all_elevators[busy].last_assigned
-            all_elevators[busy].last_assigned = call
-            return busy
+            all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
+            all_elevators[busy.id].last_assigned = call
+            busy.elev_pos = call[3]
+            updateState(busy, src, dest)
+            return busy.id
 
     if on_way is False:
-        if Comparisons.arriveTimeIdle(on_way, src) < Comparisons.arriveTimeBusy(busy, src):
-            all_elevators[idle].prev_assigned = all_elevators[idle].last_assigned
-            all_elevators[idle].last_assigned = call
-            return idle
+        if Comparisons.arriveTimeIdle(idle, call) < Comparisons.arriveTimeBusy(busy, call):
+            all_elevators[idle.id].prev_assigned = all_elevators[idle.id].last_assigned
+            all_elevators[idle.id].last_assigned = call
+            idle.elev_pos = call[3]
+            updateState(idle, src, dest)
+            return idle.id
         else:
-            all_elevators[busy].prev_assigned = all_elevators[busy].last_assigned
-            all_elevators[busy].last_assigned = call
-            return busy
+            all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
+            all_elevators[busy.id].last_assigned = call
+            busy.elev_pos = call[3]
+            updateState(busy, src, dest)
+            return busy.id
+
+    busy_time = Comparisons.arriveTimeBusy(busy, call)
+    idle_time = Comparisons.arriveTimeIdle(idle, call)
+    on_way_time = Comparisons.arriveTimeOnWay(on_way, call)
+    best_time = min(busy_time, idle_time, on_way_time)
+    if best_time == idle_time:
+        return idle.id
+    if best_time == on_way_time:
+        return on_way.id
+    if best_time == busy_time:
+        return busy.id
+
+
+def updateState(elev, src, dest):
+    if src < dest:
+        elev.state = 1
+    else:
+        elev.state = -1
 
 
 def all_calls(elevators, d_calls):
@@ -76,7 +107,7 @@ def all_calls(elevators, d_calls):
 
 if __name__ == '__main__':
     # LOADING THE CSV FILE :
-    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_d.csv"
+    file_in = r"C:\Users\yonar\PycharmProjects\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_d.csv"
     dict_calls = []
     dict_calls = Building.Building.init_calls(file_loc2=file_in)
     # print(dict_calls)
