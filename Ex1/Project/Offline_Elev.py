@@ -28,7 +28,7 @@ def create_elev(id: int):
     return elev
 
 
-def allocate_elev(call, all_elevators, elev_routes):
+def allocate_elev(call, all_elevators):
     """
     This methods allocates the best elevator to a call.
     :param call: a single call (time,s,d...)
@@ -36,41 +36,30 @@ def allocate_elev(call, all_elevators, elev_routes):
     :return: the best elevator to send.
     """
     # TODO:
-    #       fix this function to have a routing system maybe or check elevators in better way.
-    #       Right now it only sends the fastest elevator and sometimes close ones, i need to fix it.
+    #      Try consider up/down/idle cases
 
-    src = int(call[2])
-    destination = int(call[3])
-    index = Comparators.best_elev(call, all_elevators)
-    curr_elev = all_elevators[index]
-    curr_elev.go_to(destination)
-    if curr_elev.elev_pos > destination:  # goes up?
-        curr_elev.set_state(1)
-    elif curr_elev.elev_pos < destination:  # goes down?
-        curr_elev.set_state(-1)
-    closest = Comparators.find_closest(src, all_elevators)
-    curr_elev = all_elevators[closest]
-    curr_elev.go_to(src)
-    return closest
+    best_elev_id = Comparators.best_elev(call, all_elevators)
+    curr_elev = all_elevators[best_elev_id]
+    Comparators.in_route(call, curr_elev)
+    return best_elev_id
 
 
-def all_calls(elevators, d_calls, elev_routes):
+def all_calls(elevators, d_calls):
     """
     This methods starts the simulation for all the elevators calls.
-    :param elev_routes:
     :param d_calls: all the calls in the Calls.csv file
     :param elevators: list representing all the elevator in the building
     :return: the list 'elev_choices' to be merged with the csv output file.
     """
     elev_choices = []
     for calls in d_calls:
-        elev_choices.append(allocate_elev(call=calls, all_elevators=elevators, elev_routes=elev_routes))
+        elev_choices.append(allocate_elev(call=calls, all_elevators=elevators))
     return elev_choices
 
 
 if __name__ == '__main__':
     # LOADING THE CSV FILE :
-    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_d.csv"
+    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
     dict_calls = []
     dict_calls = Building.init_calls(file_loc2=file_in)
     # print(dict_calls)
@@ -83,9 +72,8 @@ if __name__ == '__main__':
     Json_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
     building = Building.init_dict(file_loc1=Json_in)
     elev_choice = []  # elevators allocation
-    elev_routes = [[], [], [], [], [], [], [], [], [], [], []]  # route of current elevator.
     all_elevs = building.elevators  # all elevators as a list.
-    elev_choice = all_calls(all_elevs, dict_calls, elev_routes)
+    elev_choice = all_calls(all_elevs, dict_calls)
 
     print("Elev Choices:")
     print(elev_choice)

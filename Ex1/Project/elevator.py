@@ -28,6 +28,7 @@ class Elevator(object):
         self.stopTime = _stopTime
         self.elev_pos = 0
         self.elev_state = 0
+        self.elev_des = 0
 
     @classmethod
     def from_dict(cls, data_dict):
@@ -50,3 +51,10 @@ class Elevator(object):
         :param new_state: gets the new state for our elevator
         """
         self.elev_state = new_state
+
+    def set_des(self, new_des: int):
+        """
+        Right now im not sure this will be useful, im just implementing in case of need.
+        :param new_des: gets the new state for our elevator
+        """
+        self.elev_des = new_des
