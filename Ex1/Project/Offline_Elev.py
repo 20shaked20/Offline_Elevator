@@ -13,17 +13,19 @@ def allocate_elev(call, all_elevators):
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
     """
+    # TODO: set this method to more readable and 'little' methods.
+
     src = int(call[2])
     dest = int(call[3])
-    idle = Comparisons.closestIdle(call, all_elevators)  # can return false
-    on_way = Comparisons.closestOnTheWay(call, all_elevators)  # can return false
-    busy = Comparisons.closestBusy(call, all_elevators)  # MUST return an elev object
+    idle = Comparisons.closest_idle(call, all_elevators)  # can return false
+    on_way = Comparisons.closest_on_the_way(call, all_elevators)  # can return false
+    busy = Comparisons.closest_busy(call, all_elevators)  # MUST return an elev object
 
     if idle is False and on_way is False:
         all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
         all_elevators[busy.id].last_assigned = call
         busy.elev_pos = call[3]
-        updateState(busy, src, dest)
+        update_state(busy, src, dest)
         return busy.id
 
     if idle is False:
@@ -31,13 +33,13 @@ def allocate_elev(call, all_elevators):
             all_elevators[on_way.id].prev_assigned = all_elevators[on_way.id].last_assigned
             all_elevators[on_way.id].last_assigned = call
             on_way.elev_pos = call[3]
-            updateState(on_way, src, dest)
+            update_state(on_way, src, dest)
             return on_way.id
         else:
             all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
             all_elevators[busy.id].last_assigned = call
             busy.elev_pos = call[3]
-            updateState(busy, src, dest)
+            update_state(busy, src, dest)
             return busy.id
 
     if on_way is False:
@@ -45,13 +47,13 @@ def allocate_elev(call, all_elevators):
             all_elevators[idle.id].prev_assigned = all_elevators[idle.id].last_assigned
             all_elevators[idle.id].last_assigned = call
             idle.elev_pos = call[3]
-            updateState(idle, src, dest)
+            update_state(idle, src, dest)
             return idle.id
         else:
             all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
             all_elevators[busy.id].last_assigned = call
             busy.elev_pos = call[3]
-            updateState(busy, src, dest)
+            update_state(busy, src, dest)
             return busy.id
 
     busy_time = Comparisons.arriveTimeBusy(busy, call)
@@ -66,7 +68,13 @@ def allocate_elev(call, all_elevators):
         return busy.id
 
 
-def updateState(elev, src, dest):
+def update_state(elev, src, dest):
+    """
+    This methods updates the up/down motion for a current elevator.
+    :param elev: represents an elevator
+    :param src: integer representing a src floor
+    :param dest: integer representing a destination floor
+    """
     if src < dest:
         elev.state = 1
     else:
@@ -87,6 +95,9 @@ def all_calls(elevators, d_calls):
 
 
 if __name__ == '__main__':
+    """
+    Main function, we load csv,json files and create an output.csv file.
+    """
     # LOADING THE CSV FILE :
     file_in = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
     dict_calls = []

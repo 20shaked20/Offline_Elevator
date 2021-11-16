@@ -30,7 +30,7 @@ def distance_as_time_from_elev(elev: elevator, floor: int):
     :param floor: represents a floor in the building
     :return: how long it will take to reach that floor.
     """
-    return distance_from_elev(elev, floor) / get_speed(elev) + getFloorTime(elev)
+    return distance_from_elev(elev, floor) / get_speed(elev) + get_floor_time(elev)
 
 
 def get_last_call(elev: elevator):
@@ -48,7 +48,7 @@ def is_idle(elev: elevator, call):
     :return: if the elevator is idle or not.
     """
     x = floor_diff(elev.last_assigned[2], elev.last_assigned[3])
-    x = x / get_speed(elev) + getFloorTime(elev)
+    x = x / get_speed(elev) + get_floor_time(elev)
     if float(elev.last_assigned[1]) + x <= float(call[1]):
         elev.elev_state = 0
         return True
@@ -61,7 +61,7 @@ def get_time_to_dest(elev: elevator):
     :param elev: represents an elevator
     :return: time it will take the elevator to reach a destination floor.
     """
-    return distance_as_time_from_elev(elev, elev.last_assigned[2]) / get_speed(elev) + getFloorTime(elev)
+    return distance_as_time_from_elev(elev, elev.last_assigned[2]) / get_speed(elev) + get_floor_time(elev)
 
 
 def get_curr(elev: elevator, call):
@@ -89,7 +89,7 @@ def get_time_from_curr(elev: elevator, floor: int, call):
     """
     curr = get_curr(elev, call)
     floors = floor_diff(curr, floor)
-    return floors / get_speed(elev) + getFloorTime(elev)
+    return floors / get_speed(elev) + get_floor_time(elev)
 
 
 def get_speed(elev: elevator):
@@ -100,18 +100,23 @@ def get_speed(elev: elevator):
     return int(elev.speed)
 
 
-def getFloorTime(elev: elevator):
+def get_floor_time(elev: elevator):
     """
-    :param elev:
-    :return:
+    :param elev: represents an elevator
+    :return: a simple floor time calculation
     """
     return elev.closeTime + elev.openTime + elev.startTime + elev.stopTime
 
 
-def isOnWay(elev, call):
+def is_on_way(elev, call):
+    """
+    :param elev: represents an elevator
+    :param call: represents a call in the building
+    :return: if the call is on the way of current elevator.
+    """
     if is_idle(elev, call):
         return False
-    call_dir = getDirection(call)
+    call_dir = get_direction(call)
     elev_dir = elev.elev_state
     if elev_dir != call_dir:
         return False
@@ -125,14 +130,18 @@ def isOnWay(elev, call):
     return True
 
 
-def getDirection(call):
+def get_direction(call):
+    """
+    :param call: represents a call
+    :return: what direction is the elevator going UP = 1, DOWN = -1
+    """
     if call[2] < call[3]:
         return 1
     else:
         return -1
 
 
-def theoreticalTime(elev: elevator, floor1: int, floor2: int):
+def theoretical_time(elev: elevator, floor1: int, floor2: int):
     """
     calculates time that would take elev to move from floor1 to floor 2
     :param elev: elevator for which calculation is done
@@ -141,10 +150,15 @@ def theoreticalTime(elev: elevator, floor1: int, floor2: int):
     :return: time in double
     """
     floors = floor_diff(floor1, floor2)
-    return floors / get_speed(elev) + getFloorTime(elev)
+    return floors / get_speed(elev) + get_floor_time(elev)
 
 
-def closestIdle(call, all_elev):
+def closest_idle(call, all_elev):
+    """
+    :param call: represents a call in the building
+    :param all_elev: list that contains all the elevators.
+    :return: the closest idle elevator.
+    """
     closest: elevator = all_elev[0]
     changed = False
     for elev in all_elev:
@@ -160,21 +174,31 @@ def closestIdle(call, all_elev):
     return closest
 
 
-def closestOnTheWay(call, all_elev):
+def closest_on_the_way(call, all_elev):
+    """
+    :param call: represents a call in the building
+    :param all_elev: list that contains all the elevators.
+    :return: closest elevator that is on its way.
+    """
     closest: elevator = all_elev[0]
     changed = False
     for elev in all_elev:
-        if isOnWay(elev, call):
+        if is_on_way(elev, call):
             if arriveTimeOnWay(elev, call) < arriveTimeOnWay(closest, call):
                 closest = elev
                 changed = True
     if changed is False:
-        if isOnWay(closest, call) is False:
+        if is_on_way(closest, call) is False:
             return False
     return closest
 
 
-def closestBusy(call, all_elev):
+def closest_busy(call, all_elev):
+    """
+    :param call: represents a call in the building
+    :param all_elev: list that contains all the elevators
+    :return: closest elevator that is 'busy'.
+    """
     closest: elevator = all_elev[0]
     for elev in all_elev:
         if is_idle(elev, call) is False:
@@ -190,10 +214,10 @@ def arriveTimeOnWay(elev, call):
 
 # time from curr if applicable
 def arriveTimeIdle(elev, call):
-    return theoreticalTime(elev, elev.elev_pos, call[2])
+    return theoretical_time(elev, elev.elev_pos, call[2])
 
 
 # time from current to dest then from dest to src
 def arriveTimeBusy(elev, call):
-    return get_time_from_curr(elev, elev.last_assigned[3], call) + theoreticalTime(elev, elev.last_assigned[3],
-                                                                                   call[2])
+    return get_time_from_curr(elev, elev.last_assigned[3], call) + theoretical_time(elev, elev.last_assigned[3],
+                                                                                    call[2])
