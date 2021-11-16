@@ -1,5 +1,5 @@
 """
-@authors: "Shaked & Yonathan"
+@authors: "Shaked & Yonatan"
 date: Nov 5
 """
 
@@ -7,16 +7,16 @@ date: Nov 5
 class Elevator(object):
 
     def __init__(self, _id: int, _speed: int, _minFloor: int, _maxFloor: int, _closeTime: int, _openTime: int,
-                 _startTime: int, _stopTime: int) -> object:
+                 _startTime: int, _stopTime: int) -> None:
         """
         :param _id: the id of the elevator
         :param _speed: the speed of the elevator
         :param _minFloor: minimum floor elevator can reach
         :param _maxFloor: maximum floor elevator can reach
-        :param _closeTime: how long it takes for elevator to close doors
-        :param _openTime: how long it takes for elevator to open doors
-        :param _startTime: how long it takes the elevator to start moving from idle state
-        :param _stopTime: how long it takes the elevator to stop from moving state
+        :param _close_time: how long it takes for elevator to close doors
+        :param _open_time: how long it takes for elevator to open doors
+        :param _start_time: how long it takes the elevator to start moving from idle state
+        :param _stop_time: how long it takes the elevator to stop from moving state
         """
         self.id = _id
         self.speed = _speed
@@ -27,10 +27,10 @@ class Elevator(object):
         self.startTime = _startTime
         self.stopTime = _stopTime
         self.elev_pos = 0
-        self.elev_state = 0          #last relevant direction
-        self.last_assigned = None    #last assigned call
-        self.prev_assigned = None    #seccond last assigned call
-        # calls initialised as empty
+        self.elev_state = 0  # last relevant direction
+        self.last_assigned = "elev_call", "0.0", "0", "0"  # last assigned call
+        # self.prev_assigned = "elev_call", "0.0", "0", "0"
+        # second last assigned call, currently not used in the algorithm.
 
     @classmethod
     def from_dict(cls, data_dict):

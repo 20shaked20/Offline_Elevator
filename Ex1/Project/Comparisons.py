@@ -21,7 +21,7 @@ def distanceFromElev(elev: elevator, floor: int):
 
 
 def distanceAsTimeFromElev(elev: elevator, floor: int):
-    return distanceFromElev(elev, floor) * getSpeed(elev) + getFloorTime(elev)
+    return distanceFromElev(elev, floor) / getSpeed(elev) + getFloorTime(elev)
 
 
 def getLastCall(elev: elevator):
@@ -30,7 +30,7 @@ def getLastCall(elev: elevator):
 
 def isIdle(elev: elevator, call):
     x = floorDiff(elev.last_assigned[2], elev.last_assigned[3])
-    x = x * getSpeed(elev) + getFloorTime(elev)
+    x = x / getSpeed(elev) + getFloorTime(elev)
     if float(elev.last_assigned[1]) + x <= float(call[1]):
         elev.elev_state = 0
         return True
@@ -40,7 +40,7 @@ def isIdle(elev: elevator, call):
 
 
 def getTimeToDest(elev: elevator):
-    return distanceAsTimeFromElev(elev, elev.last_assigned[2]) * getSpeed(elev) + getFloorTime(elev)
+    return distanceAsTimeFromElev(elev, elev.last_assigned[2]) / getSpeed(elev) + getFloorTime(elev)
 
 
 def getCurr(elev: elevator, call):
@@ -54,15 +54,15 @@ def getCurr(elev: elevator, call):
     if isIdle(elev, call):
         return elev.elev_pos
     time_diff = float(call[1]) - float(elev.last_assigned[1])
-    x = time_diff * getSpeed(elev)
-    return int(elev.last_assigned[2]) + int(x)
+    x = time_diff / getSpeed(elev)
+    return int(elev.last_assigned[2]) + int(x + elev.closeTime + elev.startTime)
     # TODO: consider using x + elev.close_time + elev.start_time
 
 
 def getTimeFromCurr(elev: elevator, floor: int, call):
     curr = getCurr(elev, call)
     floors = floorDiff(curr, floor)
-    return floors * getSpeed(elev) + getFloorTime(elev)
+    return floors / getSpeed(elev) + getFloorTime(elev)
 
 
 def getSpeed(elev: elevator):
@@ -106,7 +106,7 @@ def theoreticalTime(elev: elevator, floor1: int, floor2: int):
     :return: time in double
     """
     floors = floorDiff(floor1, floor2)
-    return floors * getSpeed(elev) + getFloorTime(elev)
+    return floors / getSpeed(elev) + getFloorTime(elev)
 
 
 def closestIdle(call, all_elev):

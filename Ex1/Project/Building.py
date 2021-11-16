@@ -1,5 +1,5 @@
 """
-@authors: "Shaked & Yonathan"
+@authors: "Shaked & Yonatan"
 date: Nov 5
 """
 
@@ -20,7 +20,7 @@ class Building(object):
         self.elevators = elevators
         self.min_floor = min_floor
         self.max_floor = max_floor
-        self.__author__ = "Shaked & Yonathan"
+        self.__author__ = "Shaked & Yonatan"
 
     @classmethod
     def init_dict(cls, file_loc1: str):

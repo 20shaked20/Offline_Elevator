@@ -107,7 +107,7 @@ def all_calls(elevators, d_calls):
 
 if __name__ == '__main__':
     # LOADING THE CSV FILE :
-    file_in = r"C:\Users\yonar\PycharmProjects\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_d.csv"
+    file_in = r"C:\Users\yonar\PycharmProjects\Offline_Elevator\Ex1\data\Ex1_input\Ex1_Calls\Calls_b.csv"
     dict_calls = []
     dict_calls = Building.Building.init_calls(file_loc2=file_in)
     # print(dict_calls)
