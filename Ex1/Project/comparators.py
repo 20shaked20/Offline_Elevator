@@ -8,26 +8,6 @@ import sys
 class Comparators:
 
     @classmethod
-    def find_closest(cls, call, all_elevators):
-        """
-        This method finds the closest elevator to a src.
-        :param call: object representing a call
-        :param all_elevators: all the elevators that are in the building
-        :return:  ID of the closest elevator.
-        """
-        src = int(call[2])
-        destination = int(call[3])
-        closest = all_elevators[0]
-        best_dist = all_elevators[0].elev_pos - src
-        for curr_elevator in all_elevators:
-            if curr_elevator.elev_pos - src < best_dist:
-                best_dist = curr_elevator.elev_pos - src
-                closest = curr_elevator
-        closest.set_des(destination)
-        closest.go_to(src)  # sends the elevator to src. /5
-        return closest.id
-
-    @classmethod
     def in_route(cls, call, curr_elevator):
         """
         this method finds if a certain call is on_route for our current elevator call.
@@ -37,10 +17,50 @@ class Comparators:
         """
         src = int(call[2])
         destination = int(call[3])
-        if curr_elevator.elev_pos < src and curr_elevator.elev_des < src:  # is between pos to destination
+
+        if Comparators.src_in_route(call, curr_elevator):
             if curr_elevator.elev_des < destination:  # if the new destination is smaller, then update it
                 curr_elevator.set_des(destination)
             curr_elevator.go_to(src)  # send it to next src then.
+
+    @classmethod
+    def src_in_route(cls, call, curr_elevator):
+        """
+        checks whether src of a call is in elevator route
+        :param call: current call
+        :param curr_elevator: elevator for which this is calculated
+        :return: True or False
+        """
+        src = int(call[2])
+        call_dir = Comparators.get_call_dir(call)
+        if call_dir == 1:
+            return curr_elevator.elev_pos < src < curr_elevator.elev_des
+        else:  # assumes dir is 1 or -1 for UP or DOWN
+            return curr_elevator.elev_pos > src > curr_elevator.elev_des
+
+    @classmethod
+    def get_call_dir(cls, call):
+        """
+        returns current call direction based on call source and destination
+        :param call: current call
+        :return: 1 or -1 representing UP or DOWN respectively
+        """
+        if call[2] < call[3]:
+            return 1
+        else:
+            return -1
+
+    @classmethod
+    def get_elev_dir(cls, curr_elevator):
+        """
+        returns current elevator direction based on call source and destination
+        :param curr_elevator: elevator for which this is calculated
+        :return: 1 or -1 representing UP or DOWN respectively
+        """
+        if curr_elevator.elev_pos < curr_elevator.elev_des:
+            return 1
+        else:
+            return -1
 
     @classmethod
     def best_time_to_src(cls, call, all_elevators):
@@ -51,15 +71,16 @@ class Comparators:
         :return: best time to source elevator id
         """
         destination = int(call[3])
-        total_time = 0
-        id = 0
+        best_time = sys.maxsize
+        elev_id = 0
         for curr_elev in all_elevators:
-            length = curr_elev.elev_pos - destination
-            if total_time > length / curr_elev.speed + curr_elev.stopTime + curr_elev.startTime:
-                total_time = length / curr_elev.speed + curr_elev.stopTime + curr_elev.startTime
-                id = curr_elev.id
+            floor_time = curr_elev.openTime + curr_elev.stopTime + curr_elev.closeTime + curr_elev.startTime
+            floor_size = abs(curr_elev.elev_pos - destination)
+            if best_time > floor_size / curr_elev.speed + floor_time:
+                best_time = floor_size / curr_elev.speed + floor_time
+                elev_id = curr_elev.id
 
-        return id
+        return elev_id
 
     @classmethod
     def best_elev(cls, call, all_elevators):
@@ -70,7 +91,6 @@ class Comparators:
         :return: id of the best elevator.
         """
 
-        closest = Comparators.find_closest(call, all_elevators)
         best_time = Comparators.best_time_to_src(call, all_elevators)
         return best_time
 
