@@ -96,7 +96,7 @@ def all_calls(elevators, d_calls):
 
 if __name__ == '__main__':
     """
-    Main function, we load csv,json files and create an output.csv file.
+    Main function, we load csv,json files and create an output_b2_a.csv file.
     """
     # LOADING THE CSV FILE :
     file_in = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     dict_calls = Building.Building.init_calls(file_loc2=file_in)
 
     # LOADING THE JSON FILE:
-    Json_in = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
+    Json_in = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Buildings/B2.json"
     building = Building.Building.init_dict(file_loc1=Json_in)
     elev_choice = []  # route for elevators allocation
     all_elevs = building.elevators  # all elevators as a list.
@@ -114,5 +114,5 @@ if __name__ == '__main__':
     print(elev_choice)
 
     # WRITING THE OUTPUT:
-    file_out = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
+    file_out = r"/Ex1/data/Ex1_input/Ex1_Calls/output_b2_a.csv"
     Building.Building.csv_output(file_in, file_out, elev_choice)
