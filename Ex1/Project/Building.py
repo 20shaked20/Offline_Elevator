@@ -6,7 +6,7 @@ date: Nov 5
 import json
 import csv
 
-from elevator import Elevator
+from Ex1.Project.elevator import Elevator
 
 
 class Building(object):
