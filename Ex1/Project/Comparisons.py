@@ -2,7 +2,7 @@
 @authors: "Shaked & Yonatan"
 date: Nov 12
 """
-import elevator
+from Ex1.Project import elevator
 
 
 def floor_diff(floor1, floor2):
@@ -77,7 +77,6 @@ def get_curr(elev: elevator, call):
     time_diff = float(call[1]) - float(elev.last_assigned[1])
     x = time_diff / get_speed(elev)
     return int(elev.last_assigned[2]) + int(x + elev.closeTime + elev.startTime)
-    # TODO: consider using x + elev.close_time + elev.start_time
 
 
 def get_time_from_curr(elev: elevator, floor: int, call):

@@ -3,9 +3,11 @@
 date: Nov 5
 """
 import sys
+from Ex1.Project import Building, Comparisons
+# import Building
+# import Comparisons
 
-import Building
-import Comparisons
+# https://packaging.python.org/tutorials/packaging-projects/
 
 
 def allocate_elev(call, all_elevators):
@@ -109,9 +111,9 @@ def inputs():
         }
     else:
         check = {
-            "Building": "/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Buildings/B5.json",
-            "Calls": "/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv",
-            "Output": "/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
+            "Building": "C:/Users/yonar/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json",
+            "Calls": "C:/Users/yonar/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv",
+            "Output": "C:/Users/yonar/PycharmProjects/Offline_Elevator/Ex1/testing/output.csv"
         }
     return check
 
