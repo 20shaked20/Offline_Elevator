@@ -6,7 +6,7 @@ date: Nov 5
 import json
 import csv
 
-from elevator import Elevator
+from Ex1.Project.elevator import Elevator
 
 
 class Building(object):
@@ -52,6 +52,12 @@ class Building(object):
 
     @classmethod
     def csv_output(cls, file_in: str, file_out: str, elev_choices):
+        """
+        Creator of the csv output file
+        :param file_in: a csv file location which has all the calls.
+        :param file_out: the new csv file we write to
+        :param elev_choices: the elevators we choose.
+        """
         dict_in = []
         with open(file_in, 'r') as f:
             writer_in = csv.reader(f)

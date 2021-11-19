@@ -1,18 +1,9 @@
 """
-@authors: "Shaked & Yonathan"
+@authors: "Shaked & Yonatan"
 date: Nov 5
 """
-import csv
-
-from Building import Building
-from elevator import Elevator
-from comparators import Comparators
-
-
-# TODO : make a better algorithm ->
-#   1. pickup more callers on the way if they are already there.
-#   2. implement routing system for elevators
-#   3. consider using up/down somehow?..
+import Building
+import Comparisons
 
 
 def allocate_elev(call, all_elevators):
@@ -22,13 +13,72 @@ def allocate_elev(call, all_elevators):
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
     """
-    # TODO:
-    #      Try consider up/down/idle cases
+    # TODO: set this method to more readable and 'little' methods.
 
-    best_elev_id = Comparators.best_elev(call, all_elevators)
-    curr_elev = all_elevators[best_elev_id]
-    Comparators.src_in_route(call, curr_elev)
-    return best_elev_id
+    src = int(call[2])
+    dest = int(call[3])
+    idle = Comparisons.closest_idle(call, all_elevators)  # can return false
+    on_way = Comparisons.closest_on_the_way(call, all_elevators)  # can return false
+    busy = Comparisons.closest_busy(call, all_elevators)  # MUST return an elev object
+
+    if idle is False and on_way is False:
+        all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
+        all_elevators[busy.id].last_assigned = call
+        busy.elev_pos = call[3]
+        update_state(busy, src, dest)
+        return busy.id
+
+    if idle is False:
+        if Comparisons.arriveTimeOnWay(on_way, call) < Comparisons.arriveTimeBusy(busy, call):
+            all_elevators[on_way.id].prev_assigned = all_elevators[on_way.id].last_assigned
+            all_elevators[on_way.id].last_assigned = call
+            on_way.elev_pos = call[3]
+            update_state(on_way, src, dest)
+            return on_way.id
+        else:
+            all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
+            all_elevators[busy.id].last_assigned = call
+            busy.elev_pos = call[3]
+            update_state(busy, src, dest)
+            return busy.id
+
+    if on_way is False:
+        if Comparisons.arriveTimeIdle(idle, call) < Comparisons.arriveTimeBusy(busy, call):
+            all_elevators[idle.id].prev_assigned = all_elevators[idle.id].last_assigned
+            all_elevators[idle.id].last_assigned = call
+            idle.elev_pos = call[3]
+            update_state(idle, src, dest)
+            return idle.id
+        else:
+            all_elevators[busy.id].prev_assigned = all_elevators[busy.id].last_assigned
+            all_elevators[busy.id].last_assigned = call
+            busy.elev_pos = call[3]
+            update_state(busy, src, dest)
+            return busy.id
+
+    busy_time = Comparisons.arriveTimeBusy(busy, call)
+    idle_time = Comparisons.arriveTimeIdle(idle, call)
+    on_way_time = Comparisons.arriveTimeOnWay(on_way, call)
+    best_time = min(busy_time, idle_time, on_way_time)
+    if best_time == idle_time:
+        return idle.id
+    if best_time == on_way_time:
+        return on_way.id
+    if best_time == busy_time:
+        return busy.id
+
+
+def update_state(elev, src, dest):
+    """
+    This methods updates the up/down motion for a current elevator.
+    :param elev: represents an elevator
+    :param src: integer representing a src floor
+    :param dest: integer representing a destination floor
+    """
+    if src < dest:
+        elev.state = 1
+    else:
+        elev.state = -1
 
 
 def all_calls(elevators, d_calls):
@@ -45,38 +95,24 @@ def all_calls(elevators, d_calls):
 
 
 if __name__ == '__main__':
+    """
+    Main function, we load csv,json files and create an output_b2_a.csv file.
+    """
     # LOADING THE CSV FILE :
-    file_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/Calls_d.csv"
+    file_in = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
     dict_calls = []
-    dict_calls = Building.init_calls(file_loc2=file_in)
+    dict_calls = Building.Building.init_calls(file_loc2=file_in)
 
-    # LOADING THE JSON FILE : working example
-    Json_in = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B5.json"
-    building = Building.init_dict(file_loc1=Json_in)
-    elev_choice = []  # elevators allocation
+    # LOADING THE JSON FILE:
+    Json_in = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Buildings/B2.json"
+    building = Building.Building.init_dict(file_loc1=Json_in)
+    elev_choice = []  # route for elevators allocation
     all_elevs = building.elevators  # all elevators as a list.
     elev_choice = all_calls(all_elevs, dict_calls)
 
     print("Elev Choices:")
     print(elev_choice)
 
-    # CREATING CSV OUTPUT FILE:
-    file_out = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
-    Building.csv_output(file_in, file_out, elev_choice)
-
-
-
-"""
-def create_elev(id: int):
-    
-    right now im not using it, maybe later.
-    :param id: elev_ID
-    :return: an object representing elevator
-
-    elev = Elevator(building.elevators[id].id, building.elevators[id].speed, building.elevators[id].minFloor,
-                    building.elevators[id].maxFloor, building.elevators[id].closeTime,
-                    building.elevators[id].openTime,
-                    building.elevators[id].startTime, building.elevators[
-                        id].stopTime)  # elevator creation, need to create as many as we want, can use list? :)
-    return elev
-"""
+    # WRITING THE OUTPUT:
+    file_out = r"/Ex1/data/Ex1_input/Ex1_Calls/output_b2_a.csv"
+    Building.Building.csv_output(file_in, file_out, elev_choice)
