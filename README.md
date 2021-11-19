@@ -6,7 +6,10 @@
 >
 >Yonatan's github: https://github.com/Teklar223
 
-### Introduction
+## Bonus part, Elevator GUI:
+https://youtu.be/jTNi10bXYZI
+
+## Introduction
 This repository is part of an assigment in an object oriented programming course at Ariel University,
 Specifically the second assignment, and it is about an offline algorithm for smart elevators.
 
