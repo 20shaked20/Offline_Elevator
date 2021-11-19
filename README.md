@@ -48,11 +48,23 @@ this essentially describes all the relative positions of the elevator in regards
   
 ## How to use?
 
+### option 1:
+  navigate to where the project is located on your machine (the root folder called Offline_Elevator), and write this line: </br>
+  ```
+  python Offline_Elev.py B1.json calls_a.csv output_B1_a.csv
+  ``` 
+  </br>
+  for easiest access, put these files in the same directory as the Offline_Elev.py file (otherwise youll have to provide absolute path URL). </br>
+  also, feel free to use any building json (B1,B2,B3,B4,B5) or any calls file (calls_a, calls_b, calls_c, calls_d), as for the output file, this is merely our convention such that it fits output_BuildingNumber_CallCase, for the order of the arguments look at the image in option 2, above the highlighted in red lines.
+
+ </br>
+
+### option 2:
   Firstly, the inputs must be specified, there are 5 building json files and 4 calls csv files provided, so currently there are 20 possible scenarios which can be run,
   and these should be specified in the Offline_Elev.py file, highlighted in red in these lines: </br>
-  ![image](https://user-images.githubusercontent.com/73063105/142407895-6cb3ba59-4ebe-45eb-85b1-74f4e5164ffa.png)
+  ![image](https://user-images.githubusercontent.com/73063105/142672895-c87fd6b0-8e2f-41fc-86f2-4f49f16f9687.png)
  </br>
-  in the image we highlighted which files are the inputs (yes, including the output.csv) which are passed along the algorithm, the files paths are relative to the Offline_elev.py file and are taken from the Ex1_input folder, we suggest that if you wish to play around with the algorithm that you first rummage this folder and have a look at the calls and buildings folders (see file Hierarchy section towards the end)
+  in the image we highlighted which files are the inputs (yes, including the output.csv) which are passed along the algorithm, the file paths here are absolute due to python3 limitations, we suggest that if you wish to play around with the algorithm that you first rummage this folder and have a look at the calls and buildings folders (see file Hierarchy section towards the end)
   </br>
   Alongside the assignment, a simulator is provided, after you run the algorithm with the desired building and calls combination, access the folder that the Ex1_checker_V1.2_obf.jar is located in: </br>
   ![image](https://user-images.githubusercontent.com/73063105/142407102-bae18dd4-947d-4611-b337-57b42d15e3f8.png) </br>
@@ -75,7 +87,8 @@ we feel that we did decent work, hence our improvements are striving towards per
 - taking care of the "dirty work" before approaching the algorithm itself, e.g: input/outut was taken care of before any code was written in the algorithm itself, this allowed us to switch our focus entirely on the algorithm once these things were done.
 
 ## File Hierarchy
-![image](https://user-images.githubusercontent.com/73063105/142406389-3b342c81-0874-453e-86d6-9f61eecfcb73.png)
+![image](https://user-images.githubusercontent.com/73063105/142672610-7062f59d-686a-4ccd-b481-0078d0ca565d.png)
+
 </br>
 
 ## External info:
