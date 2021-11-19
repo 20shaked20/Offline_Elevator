@@ -6,7 +6,7 @@ import pygame
 import time
 
 
-class elevator_gui(Frame):
+class ElevatorGui(Frame):
 
     def __init__(self, building: Ex1.Project.Building.Building):
         super().__init__()
@@ -21,7 +21,7 @@ class elevator_gui(Frame):
         self.elevators_gui = []
         self.floors_gui = []
         self.calls_log = []
-        self.log_modifier("/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/Project/GUI/log_b2_a.log")
+        self.log_modifier("/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/Project/GUI/log_b2_a.log")
         self.init_ui()
         self.floor_names()
         self.play()
@@ -69,9 +69,10 @@ class elevator_gui(Frame):
             dest = int(call[9])
             elev_id = int(call[11])
             speed = self.building.elevators[elev_id].speed
-            elev_states = self.elev_state(curr_pos_0, src)
+            curr_pos = self.get_pos(elev_id)
+            elev_states = self.elev_state(curr_pos, src)
             if elev_states == 1:  # goes up curr > src
-                gap_src = gap * abs(src - curr_pos_0)
+                gap_src = gap * abs(src - curr_pos)
                 while gap_src > 0:
                     self.canvas.update()
                     movement = speed
@@ -83,11 +84,10 @@ class elevator_gui(Frame):
                     self.canvas.update()
                     gap_src -= movement
                 self.update_pos(src, elev_id)
-                self.pos_0 = src
-                elev_states = self.elev_state(curr_pos_0, dest)
+                elev_states = self.elev_state(curr_pos, dest)
                 self.canvas.update()
                 if elev_states == 1:  # goes up src > dest
-                    gap_dest = gap * abs(dest - curr_pos_0)
+                    gap_dest = gap * abs(dest - curr_pos)
                     while gap_dest > 0:
                         self.canvas.update()
                         movement = speed
@@ -98,9 +98,9 @@ class elevator_gui(Frame):
                         self.keep_in_bounds(self.elevators_gui[elev_id])
                         self.canvas.update()
                         gap_dest -= movement
-                    curr_pos_0 = dest
+                    self.update_pos(dest, elev_id)
                 else:  # goes down src > dest
-                    gap_dest = gap * abs(dest - curr_pos_0)
+                    gap_dest = gap * abs(dest - curr_pos)
                     while gap_dest > 0:
                         self.canvas.update()
                         movement = speed
@@ -111,10 +111,10 @@ class elevator_gui(Frame):
                         self.keep_in_bounds(self.elevators_gui[elev_id])
                         self.canvas.update()
                         gap_dest -= movement
-                    curr_pos_0 = dest
+                    self.update_pos(dest, elev_id)
 
             if elev_states == -1:  # goes down curr > src
-                gap_src = gap * abs(src - curr_pos_0)
+                gap_src = gap * abs(src - curr_pos)
                 while gap_src > 0:
                     movement = speed
                     if gap_src + speed > 500:
@@ -124,10 +124,10 @@ class elevator_gui(Frame):
                     self.keep_in_bounds(self.elevators_gui[elev_id])
                     self.canvas.update()
                     gap_src -= movement
-                curr_pos_0 = src
-                elev_states = self.elev_state(curr_pos_0, dest)
+                self.update_pos(src, elev_id)
+                elev_states = self.elev_state(curr_pos, dest)
                 if elev_states == 1:  # goes up src > dest
-                    gap_dest = gap * abs(dest - curr_pos_0)
+                    gap_dest = gap * abs(dest - curr_pos)
                     while gap_dest > 0:
                         movement = speed
                         if gap_dest - speed < 0:
@@ -137,9 +137,9 @@ class elevator_gui(Frame):
                         self.keep_in_bounds(self.elevators_gui[elev_id])
                         self.canvas.update()
                         gap_dest -= movement
-                    curr_pos_0 = dest
+                    self.update_pos(dest, elev_id)
                 else:  # goes down src > dest
-                    gap_dest = gap * abs(dest - curr_pos_0)
+                    gap_dest = gap * abs(dest - curr_pos)
                     while gap_dest > 0:
                         movement = speed
                         if gap_dest + speed > 500:
@@ -149,7 +149,7 @@ class elevator_gui(Frame):
                         self.keep_in_bounds(self.elevators_gui[elev_id])
                         self.canvas.update()
                         gap_dest -= movement
-                    curr_pos_0 = dest
+                    self.update_pos(dest, elev_id)
             self.canvas.update()
 
     @classmethod
@@ -164,7 +164,7 @@ class elevator_gui(Frame):
         This method is responsible for music background in the simulation
         """
         pygame.mixer.init()
-        pygame.mixer.music.load("/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/Project/GUI/Elevator_Music.mp3")
+        pygame.mixer.music.load("/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/Project/GUI/Elevator_Music.mp3")
         pygame.mixer.music.play(loops=0)
 
     def log_modifier(self, file_loc: str):
@@ -199,10 +199,10 @@ class elevator_gui(Frame):
     def keep_in_bounds(self, elev_obj):
         x1, y1, x2, y2 = self.canvas.coords(elev_obj)
         if y2 > 500:  # if out of bounds at bottom
-            move_by = 500-y2 - 10
+            move_by = 500 - y2
             self.canvas.move(elev_obj, 0, move_by)
         if y1 < 0:
-            move_by = -y1 + 10
+            move_by = -y1
             self.canvas.move(elev_obj, 0, move_by)
 
     def update_pos(self, floor, elev_id):
@@ -219,7 +219,6 @@ class elevator_gui(Frame):
 
 
 if __name__ == '__main__':
-    b = "/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Buildings/B2.json"
-    c = "/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/output_b2_a.csv"
+    b = "/Users/Shaked/PycharmProjects/Offline_Elevator/Ex1/data/Ex1_input/Ex1_Buildings/B2.json"
     elevator_guix = ElevatorGui(building=Ex1.Project.Building.Building.init_dict(b))
     elevator_guix.root.mainloop()
