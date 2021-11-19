@@ -2,6 +2,8 @@
 @authors: "Shaked & Yonatan"
 date: Nov 5
 """
+import sys
+
 import Building
 import Comparisons
 
@@ -13,7 +15,6 @@ def allocate_elev(call, all_elevators):
     :param all_elevators: all the elevators that are in the building
     :return: the best elevator to send.
     """
-    # TODO: set this method to more readable and 'little' methods.
 
     src = int(call[2])
     dest = int(call[3])
@@ -94,25 +95,39 @@ def all_calls(elevators, d_calls):
     return elev_choices
 
 
+# Reading input names:
+def inputs():
+    """
+    This method loads from command line 3 inputs.
+    :return: the right one.
+    """
+    if len(sys.argv) == 4:
+        check = {
+            "Building": sys.argv[1],
+            "Calls": sys.argv[2],
+            "Output": sys.argv[3]
+        }
+    else:
+        check = {
+            "Building": "/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Buildings/B5.json",
+            "Calls": "/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv",
+            "Output": "/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/output.csv"
+        }
+    return check
+
+
 if __name__ == '__main__':
-    """
-    Main function, we load csv,json files and create an output_b2_a.csv file.
-    """
+    sys_inputs = inputs()
     # LOADING THE CSV FILE :
-    file_in = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Calls/Calls_a.csv"
     dict_calls = []
-    dict_calls = Building.Building.init_calls(file_loc2=file_in)
+    dict_calls = Building.Building.init_calls(file_loc2=sys_inputs["Calls"])
 
     # LOADING THE JSON FILE:
-    Json_in = r"/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/data/Ex1_input/Ex1_Buildings/B2.json"
-    building = Building.Building.init_dict(file_loc1=Json_in)
+    building = Building.Building.init_dict(file_loc1=sys_inputs["Building"])
+
     elev_choice = []  # route for elevators allocation
     all_elevs = building.elevators  # all elevators as a list.
     elev_choice = all_calls(all_elevs, dict_calls)
 
-    print("Elev Choices:")
-    print(elev_choice)
-
     # WRITING THE OUTPUT:
-    file_out = r"/Ex1/data/Ex1_input/Ex1_Calls/output_b2_a.csv"
-    Building.Building.csv_output(file_in, file_out, elev_choice)
+    Building.Building.csv_output(sys_inputs["Calls"], sys_inputs["Output"], elev_choice)

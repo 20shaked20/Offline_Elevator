@@ -6,7 +6,7 @@ import pygame
 import time
 
 
-class ElevatorGui(Frame):
+class elevator_gui(Frame):
 
     def __init__(self, building: Ex1.Project.Building.Building):
         super().__init__()
@@ -17,14 +17,14 @@ class ElevatorGui(Frame):
         self.floors = self.building.max_floor - self.building.min_floor + 1
         self.canvas = tk.Canvas(self.root, width=850, height=500)
         self.root.title("Building")
-        # self.root.resizable(False, False)
+        self.root.resizable(False, False)
         self.elevators_gui = []
         self.floors_gui = []
         self.calls_log = []
         self.log_modifier("/Users/Shaked/PycharmProjects/Offline_Elevator_2/Ex1/Project/GUI/log_b2_a.log")
         self.init_ui()
         self.floor_names()
-        # self.play()
+        self.play()
         self.movement()
 
     def init_ui(self):
@@ -36,10 +36,10 @@ class ElevatorGui(Frame):
 
         # FLOORS:
         gap_floors = 500 / self.floors
-        horizontal = 0
+        horozintal = 500
         for i in range(0, self.floors):
-            self.floors_gui.append(self.canvas.create_line(80, horizontal, 850, horizontal))
-            horizontal += gap_floors
+            self.floors_gui.append(self.canvas.create_line(80, horozintal, 850, horozintal))
+            horozintal -= gap_floors
 
         # ELEVATORS SIDINGS:
         elevators = len(self.building.elevators)
@@ -59,12 +59,6 @@ class ElevatorGui(Frame):
             self.canvas.move(elev, x1, gap_floors * self.building.max_floor)  # init to floor 0
             self.elevators_gui.append(elev)
             x1 += x1
-
-    # print(self.calls_log[1][14])  # start time
-    # print(self.calls_log[1][7])  # end time
-    # print(self.calls_log[1][8])  # src floor
-    # print(self.calls_log[1][9])  # dest floor
-    # print(self.calls_log[1][11])  # elev_id
 
     def movement(self):
         animation_refresh_seconds = 0.0001
@@ -198,7 +192,7 @@ class ElevatorGui(Frame):
         y = 0.0
         gap = 500 / self.floors
         for i in range(self.building.min_floor - 1, self.building.max_floor + 1):
-            w = tk.Label(self.root, text="Floor " + str(self.building.max_floor+self.building.min_floor-i))
+            w = tk.Label(self.root, text="Floor " + str(self.building.max_floor + self.building.min_floor - i))
             w.place(x=x, y=y, anchor='sw')
             y += gap
 

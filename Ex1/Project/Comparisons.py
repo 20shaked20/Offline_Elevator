@@ -97,7 +97,7 @@ def get_speed(elev: elevator):
     :param elev: represents an elevator
     :return: speed of current elevator
     """
-    return int(elev.speed)
+    return float(elev.speed)
 
 
 def get_floor_time(elev: elevator):
