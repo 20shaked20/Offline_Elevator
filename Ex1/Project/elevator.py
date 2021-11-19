@@ -28,6 +28,7 @@ class Elevator(object):
         self.stopTime = _stopTime
         self.elev_pos = 0
         self.elev_state = 0
+        self.elev_des = 0
 
     @classmethod
     def from_dict(cls, data_dict):
@@ -37,28 +38,23 @@ class Elevator(object):
         """
         return cls(**data_dict)
 
-    def go_to(self, new_pos):
+    def go_to(self, new_pos: int):
         """
         this method simply tells the elevator where to go next. i'e will be used to check positions.
         :param new_pos: Integer representing a floor the elevator to go.
         """
-        self.elev_pos = new_pos
+        self.elev_pos = int(new_pos)
 
-    def get_pos(self):
-        """
-        :return: the elevator current position.
-        """
-        return int(self.elev_pos)
-
-    def set_state(self, new_state):
+    def set_state(self, new_state: int):
         """
         Right now im not sure this will be useful, im just implementing in case of need.
         :param new_state: gets the new state for our elevator
         """
         self.elev_state = new_state
 
-    def get_state(self):
+    def set_des(self, new_des: int):
         """
-        :return: the elevator current state -> 0 IDLE, 1 UP , -1 DOWN
+        Right now im not sure this will be useful, im just implementing in case of need.
+        :param new_des: gets the new state for our elevator
         """
-        return int(self.elev_state)
+        self.elev_des = new_des
